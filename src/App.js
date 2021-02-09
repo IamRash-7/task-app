@@ -21,38 +21,7 @@ import  Navbar  from "./components/navbar";
 const App = () => {
   const [posts, setPosts] = useState([]);
 
-  useEffect(() => {
-
-    db.collection("news")
-      .orderBy("createdAt", "desc")
-      .get()
-      .then((querySnapshot) => {
-        const data = querySnapshot.docs.map((doc) => ({
-          id: doc.id,
-          ...doc.data(),
-        }));
-
-        setPosts(data);
-      });
-  }, []);
-
-  useEffect(() => {
-
-    db.collection("news")
-      .orderBy("createdAt", "desc")
-      .onSnapshot((querySnapshot) => {
-        const _posts = [];
-
-        querySnapshot.forEach((doc) => {
-          _posts.push({
-            id: doc.id,
-            ...doc.data(),
-          });
-        });
-
-        setPosts(_posts);
-      });
-  }, []);
+  
 
   const { isOpen, onOpen, onClose } = useDisclosure();
     const [username, setUsername] = useState("");
@@ -72,9 +41,42 @@ const App = () => {
       }
     }
 
+    useEffect(() => {
+
+      db.collection("news")
+        .orderBy("createdAt", "desc")
+        .get()
+        .then((querySnapshot) => {
+          const data = querySnapshot.docs.map((doc) => ({
+            id: doc.id,
+            ...doc.data(),
+          }));
+  
+          setPosts(data);
+        });
+    }, []);
+  
+    useEffect(() => {
+  
+      db.collection("news")
+        .orderBy("createdAt", "desc")
+        .onSnapshot((querySnapshot) => {
+          const _posts = [];
+  
+          querySnapshot.forEach((doc) => {
+            _posts.push({
+              id: doc.id,
+              ...doc.data(),
+            });
+          });
+  
+          setPosts(_posts);
+        });
+    }, []);
+
   return (
     <>
-    <Button onClick={onOpen} colorScheme="blue">
+    {! access && <><Button onClick={onOpen} colorScheme="blue">
           Login
         </Button>
   
@@ -111,7 +113,7 @@ const App = () => {
               </ModalFooter>
             </ModalContent>
           </ModalOverlay>
-        </Modal>
+        </Modal></>}
         {access ?<Navbar posts={posts}/> : <DisplayPosts posts={posts}/>}
     </>
   );
