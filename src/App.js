@@ -114,7 +114,7 @@ const App = () => {
             </ModalContent>
           </ModalOverlay>
         </Modal></>}
-        {access ?<Navbar posts={posts}/> : <DisplayPosts posts={posts}/>}
+        {access ?<Navbar access={access} setAccess={setAccess} posts={posts}/> : <DisplayPosts posts={posts}/>}
     </>
   );
 };
